@@ -6,6 +6,7 @@ import typer
 from meltano.edk.extension import DescribeFormat
 from meltano.edk.logging import default_logging_config, parse_log_level
 
+from dbt_artifacts_ext.converter import ConvertFormat
 from dbt_artifacts_ext.extension import DbtArtifacts
 
 APP_NAME = "DbtArtifacts"
@@ -50,6 +51,18 @@ def describe(
             "describe failed with uncaught exception, please report to maintainer"
         )
         sys.exit(1)
+
+
+@app.command()
+def convert(
+    convert_format: ConvertFormat = typer.Option(
+        None,
+        "--format",
+        help="Format to convert to.",
+    )
+):
+    """Convert artifacts to an output format."""
+    ext.convert(convert_format)
 
 
 @app.callback(invoke_without_command=True)

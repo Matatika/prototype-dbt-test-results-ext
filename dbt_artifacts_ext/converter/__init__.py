@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 import structlog
 
@@ -17,11 +17,9 @@ class ConvertFormat(str, Enum):
 
 
 @dataclass
-class ConversionResult:
-    table_name: str
-    table_data: dict
+class ConversionContext:
+    metadata: dict
     data: Any
-    path: Path = None
 
 
 class Converter(abc.ABC):
@@ -38,19 +36,32 @@ class Converter(abc.ABC):
         log.debug(f"Source directory: {self.source_dir}")
         log.debug(f"Output directory: {self.output_dir}")
 
+    @property
+    def file_ext(self) -> str:
+        ...
+
     @abc.abstractmethod
-    def convert(self) -> List[ConversionResult]:
+    def convert(self) -> list[ConversionContext]:
         return []
 
     @abc.abstractmethod
-    def write(self, path, data):
-        return Path(path)
+    def write(self, result: ConversionContext):
+        file_ext = self.file_ext
+
+        if not file_ext.startswith("."):
+            file_ext = f".{file_ext}"
+
+        unique_id = result.metadata["unique_id"]
+        return Path(f"{self.output_dir}/{unique_id}{file_ext}")
 
     def run(self):
         log.info(f"Using {self.__class__.__name__}")
 
         self.load_artifacts()
-        self.convert()
+        results = self.convert()
+
+        for result in results:
+            self.write(result)
 
     def load_artifacts(self):
         with open(f"{self.source_dir}/manifest.json") as manifest_file:

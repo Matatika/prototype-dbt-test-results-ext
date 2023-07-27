@@ -5,6 +5,9 @@ import structlog
 from meltano.edk import models
 from meltano.edk.extension import ExtensionBase
 
+from dbt_artifacts_ext.converter import ConvertFormat
+from dbt_artifacts_ext.converter.factory import ConverterFactory
+
 log = structlog.get_logger()
 
 
@@ -28,3 +31,7 @@ class DbtArtifacts(ExtensionBase):
                 ),
             ]
         )
+
+    def convert(self, convert_format: ConvertFormat):
+        converter = ConverterFactory.get(convert_format)
+        converter.run()
