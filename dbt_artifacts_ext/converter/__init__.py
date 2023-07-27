@@ -4,7 +4,7 @@ import os
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, List
 
 import structlog
 
@@ -41,7 +41,7 @@ class Converter(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def convert(self) -> list[ConversionContext]:
+    def convert(self) -> List[ConversionContext]:
         return []
 
     @abc.abstractmethod

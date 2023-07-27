@@ -56,7 +56,7 @@ def describe(
 @app.command()
 def convert(
     convert_format: ConvertFormat = typer.Option(
-        None,
+        ConvertFormat.MERMAID,
         "--format",
         help="Format to convert to.",
     )
