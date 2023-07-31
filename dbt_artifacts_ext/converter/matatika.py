@@ -8,6 +8,7 @@ from dbt_artifacts_ext.converter import ConversionContext, Converter
 from dbt_artifacts_ext.converter.mermaid import INDENT, MermaidConverter
 
 DEFAULT_SOURCE = "dbt models"
+KEY_ORDER = ("version",)
 
 log = structlog.get_logger()
 
@@ -35,7 +36,10 @@ class MatatikaConverter(MermaidConverter):
             dataset.visualisation = json.dumps({"mermaid": {}}, indent=INDENT)
             dataset.raw_data = result.data
 
-            result.data = dataset.to_dict(apply_translations=False)
+            result.data = {
+                **dict.fromkeys(KEY_ORDER),
+                **dataset.to_dict(apply_translations=False),
+            }
 
         return results
 
@@ -48,4 +52,5 @@ class MatatikaConverter(MermaidConverter):
                 f,
                 indent=len(INDENT),
                 width=float("inf"),
+                sort_keys=False,
             )
