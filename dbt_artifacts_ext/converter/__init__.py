@@ -14,6 +14,8 @@ log = structlog.get_logger()
 class ConvertFormat(str, Enum):
     MERMAID = "mermaid"
     MERMAID_10 = "mermaid@10"
+    MATATIKA = "matatika"
+    MATATIKA_0 = "matatika@0"
 
 
 @dataclass

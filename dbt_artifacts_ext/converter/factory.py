@@ -1,5 +1,6 @@
 from dbt_artifacts_ext.converter import Converter, ConvertFormat
 from dbt_artifacts_ext.converter.mermaid import MermaidConverter
+from dbt_artifacts_ext.converter.matatika import MatatikaConverter
 
 
 class ConverterFactory:
@@ -10,5 +11,11 @@ class ConverterFactory:
             ConvertFormat.MERMAID_10,
         ]:
             return MermaidConverter()
+
+        if convert_format in [
+            ConvertFormat.MATATIKA,
+            ConvertFormat.MATATIKA_0,
+        ]:
+            return MatatikaConverter()
 
         raise ValueError(f"No converter available for format: {convert_format}")
