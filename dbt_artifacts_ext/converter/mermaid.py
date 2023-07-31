@@ -1,3 +1,5 @@
+import re
+
 import structlog
 
 from dbt_artifacts_ext.converter import ConversionContext, Converter
@@ -49,7 +51,9 @@ class MermaidConverter(Converter):
             columns: dict[str, dict] = tables[table_name]["columns"]
 
             for column_name, column_data in columns.items():
+                column_name = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
                 column_type = column_data["type"].replace(" ", "_")
+
                 lines.append(f"{INDENT * 2}{column_type} {column_name}")
 
             lines.append(f"{INDENT}}}")
