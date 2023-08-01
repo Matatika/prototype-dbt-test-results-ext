@@ -780,12 +780,12 @@ files = [
 
 [[package]]
 name = "matatika"
-version = "1.15.0.dev2"
+version = "1.15.0"
 description = "A Python utility for interfacing with the Matatika service"
 optional = false
 python-versions = "*"
 files = [
-    {file = "matatika-1.15.0.dev2-py3-none-any.whl", hash = "sha256:517bc70b89b8f533d49630fc786e6a6e86bc443af6606d4f27533e92896deccf"},
+    {file = "matatika-1.15.0-py3-none-any.whl", hash = "sha256:ba84daec573bcd02d522d98f6c96275442f6d415ab72b072359ed90fb6826359"},
 ]
 
 [package.dependencies]
@@ -800,11 +800,6 @@ requests = ">=2.24,<3.0"
 dev = ["autopep8"]
 lint = ["pylint"]
 test = ["pytest", "requests-mock (==1.9.3)"]
-
-[package.source]
-type = "legacy"
-url = "https://test.pypi.org/simple"
-reference = "test"
 
 [[package]]
 name = "mccabe"
@@ -1617,4 +1612,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "<3.12,>=3.7"
-content-hash = "f07657764aed637724e5c1347a2325d82ec710bbecef9ed78add879cc2d6811b"
+content-hash = "e0b20198f505de8a4594ba82e750600b25af469da4e68183d2add6870e67f913"
