@@ -34,55 +34,65 @@ class MermaidConverter(Converter):
             **self.manifest["sources"],
         }
 
-        for i, (table_name, table_data) in enumerate(metadata.items()):
-            progress = f"[{i + 1}/{len(metadata)}]\t"
-            resource_type = table_data["resource_type"]
-
-            if resource_type not in RESOURCE_TYPES:
-                log.info(f"{progress}Skipping {resource_type} '{table_name}'")
-                continue
-
-            log.info(f"{progress}Processing {resource_type} '{table_name}'")
-
-            lines = [
-                "erDiagram",
-                f'{INDENT}"{table_name}" {{',
-            ]
-
-            columns: dict[str, dict] = tables.get(table_name, {}).get("columns", {})
-
-            for column_name, column_data in columns.items():
-                column_name = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
-                column_type = column_data["type"].replace(" ", "_")
-
-                lines.append(f"{INDENT * 2}{column_type} {column_name}")
-
-            lines.append(f"{INDENT}}}")
-            lines.append("")
-
-            related_tables: dict[str, list[str]] = {
-                "upstream": parent_map[table_name],
-                "downstream": child_map[table_name],
+        package_metadata = {
+            package_name: {
+                k: v for k, v in metadata.items() if v["package_name"] == package_name
             }
+            for package_name in [v["package_name"] for v in metadata.values()]
+        }
 
-            for rel_name, related_table_names in related_tables.items():
-                if not related_table_names:
+        for package_name, metadata in package_metadata.items():
+            log.info(f"Processing package '{package_name}'")
+
+            for i, (table_name, table_data) in enumerate(metadata.items()):
+                progress = f"[{i + 1}/{len(metadata)}]\t"
+                resource_type = table_data["resource_type"]
+
+                if resource_type not in RESOURCE_TYPES:
+                    log.info(f"{progress}Skipping {resource_type} '{table_name}'")
                     continue
 
-                lines.append(f"{INDENT}%% {rel_name} relationships")
+                log.info(f"{progress}Processing {resource_type} '{table_name}'")
 
-                for related_table_name in related_table_names:
-                    source, destination = (
-                        (related_table_name, table_name)
-                        if rel_name == "upstream"
-                        else (table_name, related_table_name)
-                    )
+                lines = [
+                    "erDiagram",
+                    f'{INDENT}"{table_name}" {{',
+                ]
 
-                    lines.append(
-                        f'{INDENT}"{source}" {NODE_CONNECTOR} "{destination}" : ""'
-                    )
+                columns: dict[str, dict] = tables.get(table_name, {}).get("columns", {})
 
-            results.append(ConversionContext(table_data, "\n".join(lines)))
+                for column_name, column_data in columns.items():
+                    column_name = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
+                    column_type = column_data["type"].replace(" ", "_")
+
+                    lines.append(f"{INDENT * 2}{column_type} {column_name}")
+
+                lines.append(f"{INDENT}}}")
+                lines.append("")
+
+                related_tables: dict[str, list[str]] = {
+                    "upstream": parent_map[table_name],
+                    "downstream": child_map[table_name],
+                }
+
+                for rel_name, related_table_names in related_tables.items():
+                    if not related_table_names:
+                        continue
+
+                    lines.append(f"{INDENT}%% {rel_name} relationships")
+
+                    for related_table_name in related_table_names:
+                        source, destination = (
+                            (related_table_name, table_name)
+                            if rel_name == "upstream"
+                            else (table_name, related_table_name)
+                        )
+
+                        lines.append(
+                            f'{INDENT}"{source}" {NODE_CONNECTOR} "{destination}" : ""'
+                        )
+
+                results.append(ConversionContext(table_data, "\n".join(lines)))
 
         return results
 
