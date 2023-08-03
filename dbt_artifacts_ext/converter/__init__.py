@@ -20,6 +20,7 @@ class ConvertFormat(str, Enum):
 
 @dataclass
 class ConversionContext:
+    identifier: Any
     metadata: dict
     data: Any
 
@@ -53,8 +54,7 @@ class Converter(abc.ABC):
         if not file_ext.startswith("."):
             file_ext = f".{file_ext}"
 
-        unique_id = result.metadata["unique_id"]
-        return Path(f"{self.output_dir}/{unique_id}{file_ext}")
+        return Path(f"{self.output_dir}/{result.identifier}{file_ext}")
 
     def run(self):
         log.info(f"Using {self.__class__.__name__}")

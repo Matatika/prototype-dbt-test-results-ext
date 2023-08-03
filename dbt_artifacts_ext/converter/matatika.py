@@ -30,8 +30,8 @@ class MatatikaConverter(MermaidConverter):
 
         for result in results:
             dataset = DatasetV0_2()
-            dataset.title = result.metadata["name"]
-            dataset.description = result.metadata["description"] or None
+            dataset.title = result.metadata.get("name") or result.identifier
+            dataset.description = result.metadata.get("description") or None
             dataset.source = DEFAULT_SOURCE
             dataset.visualisation = json.dumps({"mermaid": {}}, indent=INDENT)
             dataset.raw_data = result.data

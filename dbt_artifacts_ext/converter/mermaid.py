@@ -21,8 +21,8 @@ class MermaidConverter(Converter):
     def convert(self):
         results = super().convert()
 
-        parent_map: dict = self.manifest["parent_map"]
-        child_map: dict = self.manifest["child_map"]
+        parent_map: dict[str, list] = self.manifest["parent_map"]
+        child_map: dict[str, list] = self.manifest["child_map"]
 
         tables: dict[str, dict] = {
             **self.catalog["nodes"],
@@ -43,6 +43,8 @@ class MermaidConverter(Converter):
 
         for package_name, metadata in package_metadata.items():
             log.info(f"Processing package '{package_name}'")
+
+            full_lines = []
 
             for i, (table_name, table_data) in enumerate(metadata.items()):
                 progress = f"[{i + 1}/{len(metadata)}]\t"
@@ -92,7 +94,18 @@ class MermaidConverter(Converter):
                             f'{INDENT}"{source}" {NODE_CONNECTOR} "{destination}" : ""'
                         )
 
-                results.append(ConversionContext(table_data, "\n".join(lines)))
+                results.append(ConversionContext(table_data["unique_id"], table_data, "\n".join(lines)))
+
+                for parent_name in parent_map[table_name]:
+                    full_lines.append(
+                        f'{INDENT}"{parent_name}" {NODE_CONNECTOR} "{table_name}" : ""'
+                    )
+
+            if not full_lines:
+                continue
+
+            full_lines.insert(0, "erDiagram")
+            results.append(ConversionContext(package_name, metadata, "\n".join(full_lines)))
 
         return results
 
