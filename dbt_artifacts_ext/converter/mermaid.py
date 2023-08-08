@@ -89,7 +89,13 @@ class MermaidConverter(Converter):
                             f'{INDENT}"{source}" {NODE_CONNECTOR} "{destination}" : ""'
                         )
 
-                results.append(ConversionContext(table_data["unique_id"], table_data, "\n".join(lines)))
+                results.append(
+                    ConversionContext(
+                        table_data["unique_id"],
+                        table_data,
+                        "\n".join(lines),
+                    )
+                )
 
                 for parent_name in parent_map[table_name]:
                     full_lines.append(
@@ -100,7 +106,13 @@ class MermaidConverter(Converter):
                 continue
 
             full_lines.insert(0, "erDiagram")
-            results.append(ConversionContext(package_name, metadata, "\n".join(full_lines)))
+            results.append(
+                ConversionContext(
+                    package_name,
+                    metadata,
+                    "\n".join(full_lines),
+                )
+            )
 
         return results
 

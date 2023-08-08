@@ -1,6 +1,6 @@
 from dbt_artifacts_ext.converter import Converter, ConvertFormat
-from dbt_artifacts_ext.converter.mermaid import MermaidConverter
 from dbt_artifacts_ext.converter.matatika import MatatikaConverter
+from dbt_artifacts_ext.converter.mermaid import MermaidConverter
 
 
 class ConverterFactory:
