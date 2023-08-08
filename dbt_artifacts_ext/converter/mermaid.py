@@ -6,11 +6,6 @@ from dbt_artifacts_ext.converter import ConversionContext, Converter
 
 INDENT = " " * 4
 NODE_CONNECTOR = "}|--|{"
-RESOURCE_TYPES = {
-    "source",
-    "model",
-    "snapshot",
-}
 
 log = structlog.get_logger()
 
@@ -50,7 +45,7 @@ class MermaidConverter(Converter):
                 progress = f"[{i + 1}/{len(metadata)}]\t"
                 resource_type = table_data["resource_type"]
 
-                if resource_type not in RESOURCE_TYPES:
+                if resource_type not in self.resource_types:
                     log.info(f"{progress}Skipping {resource_type} '{table_name}'")
                     continue
 

@@ -18,6 +18,14 @@ class ConvertFormat(str, Enum):
     MATATIKA_0 = "matatika@0"
 
 
+class ResourceType(str, Enum):
+    SOURCE = "source"
+    MODEL = "model"
+    SNAPSHOT = "snapshot"
+    TEST = "test"
+    ALL = "all"
+
+
 @dataclass
 class ConversionContext:
     identifier: Any
@@ -38,6 +46,21 @@ class Converter(abc.ABC):
 
         log.debug(f"Source directory: {self.source_dir}")
         log.debug(f"Output directory: {self.output_dir}")
+
+        resource_types = os.getenv("DBT_ARTIFACTS_RESOURCE_TYPES")
+
+        self.resource_types = (
+            [ResourceType(rt) for rt in json.loads(resource_types)]
+            if resource_types
+            else [ResourceType.ALL]
+        )
+
+        if ResourceType.ALL in self.resource_types:
+            self.resource_types = [
+                rt for rt in ResourceType if rt is not ResourceType.ALL
+            ]
+
+        log.debug(f"Resource types: {self.resource_types}")
 
     @property
     def file_ext(self) -> str:
