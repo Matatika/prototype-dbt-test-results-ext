@@ -1,0 +1,95 @@
+{
+    "nodes": {
+        "model.test_project.model_table_1": {
+            "resource_type": "model",
+            "unique_id": "model.test_project.model_table_1",
+            "package_name": "test_project",
+            "name": "model_table_1",
+            "description": "Test dbt model 1"
+        },
+        "model.test_project.model_table_2": {
+            "resource_type": "model",
+            "unique_id": "model.test_project.model_table_2",
+            "package_name": "test_project",
+            "name": "model_table_2",
+            "description": "Test dbt model 2"
+        },
+        "test.test_project.test_table_1": {
+            "resource_type": "test",
+            "unique_id": "model.test_project.test_table_1",
+            "package_name": "test_project",
+            "name": "test_table",
+            "description": "Test dbt test 1"
+        },
+        "test.test_project.test_table_2": {
+            "resource_type": "test",
+            "unique_id": "model.test_project.test_table_2",
+            "package_name": "test_project",
+            "name": "test_table_2",
+            "description": "Test dbt test 2"
+        }
+    },
+    "sources": {
+        "source.test_project.source_table_1": {
+            "resource_type": "source",
+            "unique_id": "source.test_project.source_table_1",
+            "package_name": "test_project",
+            "name": "source_table_1",
+            "description": "Test dbt source 1"
+        },
+        "source.test_project.source_table_2": {
+            "resource_type": "source",
+            "unique_id": "source.test_project.source_table_2",
+            "package_name": "test_project",
+            "name": "source_table_2",
+            "description": "Test dbt source 2"
+        },
+        "source.test_project.source_table_3": {
+            "resource_type": "source",
+            "unique_id": "source.test_project.source_table_3",
+            "package_name": "test_project",
+            "name": "source_table_3",
+            "description": "Test dbt source 3"
+        }
+    },
+    "parent_map": {
+        "model.test_project.model_table_1": [
+            "source.test_project.source_table_1",
+            "source.test_project.source_table_2"
+        ],
+        "model.test_project.model_table_2": [
+            "source.test_project.source_table_2",
+            "source.test_project.source_table_3"
+        ],
+        "test.test_project.test_table_1": [
+            "model.test_project.model_table_1"
+        ],
+        "test.test_project.test_table_2": [
+            "model.test_project.model_table_2"
+        ],
+        "source.test_project.source_table_1": [],
+        "source.test_project.source_table_2": [],
+        "source.test_project.source_table_3": []
+
+    },
+    "child_map": {
+        "model.test_project.model_table_1": [
+            "test.test_project.test_table_1"
+        ],
+        "model.test_project.model_table_2": [
+            "test.test_project.test_table_2"
+        ],
+        "test.test_project.test_table_1": [],
+        "test.test_project.test_table_2": [],
+        "source.test_project.source_table_1": [
+            "model.test_project.model_table_1"
+        ],
+        "source.test_project.source_table_2": [
+            "model.test_project.model_table_1",
+            "model.test_project.model_table_2"
+        ],
+        "source.test_project.source_table_3": [
+            "model.test_project.model_table_2"
+        ]
+    }
+}

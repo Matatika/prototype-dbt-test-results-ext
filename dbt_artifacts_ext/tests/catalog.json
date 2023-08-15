@@ -1,0 +1,97 @@
+{
+    "nodes": {
+        "model.test_project.model_table_1": {
+            "columns": {
+                "model_column_1": {
+                    "type": "column type"
+                },
+                "model_column_2": {
+                    "type": "column type"
+                },
+                "model_column_3": {
+                    "type": "column type"
+                }
+            }
+        },
+        "model.test_project.model_table_2": {
+            "columns": {
+                "model_column_1": {
+                    "type": "column type"
+                },
+                "model_column_2": {
+                    "type": "column type"
+                },
+                "model_column_3": {
+                    "type": "column type"
+                }
+            }
+        },
+        "test.test_project.test_table_1": {
+            "columns": {
+                "model_column_1": {
+                    "type": "column type"
+                },
+                "model_column_2": {
+                    "type": "column type"
+                },
+                "model_column_3": {
+                    "type": "column type"
+                }
+            }
+        },
+        "test.test_project.test_table_2": {
+            "columns": {
+                "test_column_1": {
+                    "type": "column type"
+                },
+                "test_column_2": {
+                    "type": "column type"
+                },
+                "test_column_3": {
+                    "type": "column type"
+                }
+            }
+        }
+    },
+    "sources": {
+        "source.test_project.source_table_1": {
+            "columns": {
+                "source_column_1": {
+                    "type": "column type"
+                },
+                "source_column_2": {
+                    "type": "column type"
+                },
+                "source_column_3": {
+                    "type": "column type"
+                }
+            }
+        },
+        "source.test_project.source_table_2": {
+            "columns": {
+                "source_column_1": {
+                    "type": "column type"
+                },
+                "source_column_2": {
+                    "type": "column type"
+                },
+                "source_column_3": {
+                    "type": "column type"
+                }
+            }
+        },
+        "source.test_project.source_table_3": {
+            "columns": {
+                "source_column_1": {
+                    "type": "column type"
+                },
+                "source_column_2": {
+                    "type": "column type"
+                },
+                "source_column_3": {
+                    "type": "column type"
+                }
+            }
+        }
+    }
+}

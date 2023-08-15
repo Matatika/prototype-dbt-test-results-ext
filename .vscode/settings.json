@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "dbt_artifacts_ext"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}
