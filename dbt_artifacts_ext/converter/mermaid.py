@@ -39,10 +39,12 @@ class MermaidConverter(Converter):
         for package_name, metadata in package_metadata.items():
             log.info(f"Processing package '{package_name}'")
 
+            total_resources = len(metadata)
             full_lines = []
-
+            
             for i, (table_name, table_data) in enumerate(metadata.items()):
-                progress = f"[{i + 1}/{len(metadata)}]\t"
+                current = str(i + 1).rjust(len(str(total_resources)))
+                progress = f"[{current}/{total_resources}]\t"
                 resource_type = table_data["resource_type"]
 
                 if resource_type not in self.resource_types:
