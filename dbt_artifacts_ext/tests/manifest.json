@@ -16,14 +16,14 @@
         },
         "test.test_project.test_table_1": {
             "resource_type": "test",
-            "unique_id": "model.test_project.test_table_1",
+            "unique_id": "test.test_project.test_table_1",
             "package_name": "test_project",
-            "name": "test_table",
+            "name": "test_table_1",
             "description": "Test dbt test 1"
         },
         "test.test_project.test_table_2": {
             "resource_type": "test",
-            "unique_id": "model.test_project.test_table_2",
+            "unique_id": "test.test_project.test_table_2",
             "package_name": "test_project",
             "name": "test_table_2",
             "description": "Test dbt test 2"
