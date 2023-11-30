@@ -75,6 +75,11 @@ class MatatikaConverter(Converter):
                 SELECT TEST_FAILURES_JSON
                 FROM MATATIKA_TEST_RESULTS.TEST_FAILURE_CENTRAL
                 WHERE TEST_NAME = '{test_node["unique_id"]}'
+                AND TEST_RUN_TIME = (
+                    SELECT MAX(TEST_RUN_TIME)
+                    FROM MATATIKA_TEST_RESULTS.TEST_FAILURE_CENTRAL
+                    WHERE TEST_NAME = '{test_node["unique_id"]}'
+                )
                 """
             ).strip("\n")
 
