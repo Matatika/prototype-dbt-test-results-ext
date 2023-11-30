@@ -56,8 +56,8 @@ class MatatikaConverter(Converter):
                     "related_table": {
                         "columns": [
                             {
-                                "name": "TEST_FAILURE_JSON",
-                                "label": "Test failure JSON",
+                                "name": "TEST_FAILURES_JSON",
+                                "post_process": "flatten",
                             },
                         ]
                     },
