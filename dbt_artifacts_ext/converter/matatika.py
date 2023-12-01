@@ -53,10 +53,12 @@ class MatatikaConverter(Converter):
 
             dataset.metadata = json.dumps(
                 {
+                    "name": "TEST_FAILURE_CENTRAL",
                     "related_table": {
                         "columns": [
                             {
                                 "name": "TEST_FAILURES_JSON",
+                                "label": "Test failures JSON",
                                 "post_process": "flatten",
                             },
                         ]
