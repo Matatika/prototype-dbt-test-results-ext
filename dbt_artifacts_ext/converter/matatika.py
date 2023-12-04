@@ -59,7 +59,7 @@ class MatatikaConverter(Converter):
                             {
                                 "name": "TEST_FAILURES_JSON",
                                 "label": "Test failures JSON",
-                                "post_process": "flatten",
+                                "post_process": "json_parse",
                             },
                         ]
                     },
