@@ -74,7 +74,7 @@ class MatatikaConverter(Converter):
 
             dataset.query = dedent(
                 f"""
-                SELECT TEST_FAILURES_JSON
+                SELECT TEST_FAILURES_JSON "TEST_FAILURE_CENTRAL.TEST_FAILURES_JSON"
                 FROM MATATIKA_TEST_RESULTS.TEST_FAILURE_CENTRAL
                 WHERE TEST_NAME = '{test_node["unique_id"]}'
                 AND TEST_RUN_TIME = (
