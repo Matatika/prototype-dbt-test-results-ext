@@ -63,8 +63,8 @@ class Converter(abc.ABC):
         log.debug(f"Resource types: {self.resource_types}")
 
     @property
-    def file_ext(self) -> str:
-        ...
+    @abc.abstractmethod
+    def file_ext(self) -> str: ...
 
     @abc.abstractmethod
     def convert(self) -> List[ConversionContext]:

@@ -41,7 +41,7 @@ class MermaidConverter(Converter):
 
             total_resources = len(metadata)
             full_lines = []
-            
+
             for i, (table_name, table_data) in enumerate(metadata.items()):
                 current = str(i + 1).rjust(len(str(total_resources)))
                 progress = f"[{current}/{total_resources}]\t"

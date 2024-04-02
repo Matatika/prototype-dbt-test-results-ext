@@ -1,4 +1,5 @@
 """DbtArtifacts cli entrypoint."""
+
 import sys
 
 import structlog
@@ -41,7 +42,7 @@ def initialize(
 def describe(
     output_format: DescribeFormat = typer.Option(
         DescribeFormat.text, "--format", help="Output format"
-    )
+    ),
 ) -> None:
     """Describe the available commands of this extension."""
     try:
@@ -59,7 +60,7 @@ def convert(
         ConvertFormat.MERMAID,
         "--format",
         help="Format to convert to.",
-    )
+    ),
 ):
     """Convert artifacts to an output format."""
     ext.convert(convert_format)

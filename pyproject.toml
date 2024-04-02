@@ -23,11 +23,6 @@ typer = "^0.6.1"
 "meltano.edk"= {git = "https://github.com/meltano/edk.git", rev="main"}
 matatika = "^1.15.0"
 
-[tool.poetry.dev-dependencies]
-black = "^22.3.0"
-isort = "^5.10.1"
-flake8 = "^3.9.0"
-
 [build-system]
 requires = ["poetry-core>=1.0.8"]
 build-backend = "poetry.core.masonry.api"
