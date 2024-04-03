@@ -30,6 +30,7 @@ class ResourceType(str, Enum):
 class ConversionContext:
     identifier: Any
     metadata: dict
+    description: "list[str]"
     data: Any
 
 

@@ -60,11 +60,20 @@ class MermaidConverter(Converter):
 
                 columns: dict[str, dict] = tables.get(table_name, {}).get("columns", {})
 
-                for column_name, column_data in columns.items():
-                    column_name = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
-                    column_type = column_data["type"].replace(" ", "_")
+                description: list = []
 
-                    lines.append(f"{INDENT * 2}{column_type} {column_name}")
+                for column_name, column_data in columns.items():
+                    column_name_underscored = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
+                    column_type = column_data["type"].replace(" ", "_")
+                    column_metadata = metadata.get(table_name, {}).get("columns", {})
+                    if any(column_name == key for key in column_metadata.keys()):
+                        column_description = '"' + column_metadata[column_name]["description"] + '"'
+                    else:
+                        column_description = ''
+
+                    description.append(f"| {column_name} |")
+
+                    lines.append(f"{INDENT * 2}{column_name_underscored} {column_type} {column_description}")
 
                 lines.append(f"{INDENT}}}")
                 lines.append("")
@@ -95,6 +104,7 @@ class MermaidConverter(Converter):
                     ConversionContext(
                         table_data["unique_id"],
                         table_data,
+                        description,
                         "\n".join(lines),
                     )
                 )
@@ -112,6 +122,7 @@ class MermaidConverter(Converter):
                 ConversionContext(
                     package_name,
                     metadata,
+                    description,
                     "\n".join(full_lines),
                 )
             )
