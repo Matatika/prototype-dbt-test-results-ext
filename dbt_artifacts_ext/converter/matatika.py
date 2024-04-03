@@ -31,7 +31,7 @@ class MatatikaConverter(MermaidConverter):
         for result in results:
             description_parts = [result.metadata.get("description")]
             if result.description:
-                result_description = ["| Columns |", "| --- |"]
+                result_description = ["| Column | Description |", "| --- | --- |"]
                 result_description.extend(result.description)
                 description_parts.append('\n'.join(result_description))
 
