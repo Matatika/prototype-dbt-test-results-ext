@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dbt-artifacts-ext"
-version = "0.0.1"
+version = "0.1.0"
 description = "`dbt-artifacts-ext` is a Meltano utility extension."
 authors = ["Reuben Frankel"]
 license = "Apache 2.0"
