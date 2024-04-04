@@ -11,7 +11,8 @@ def test_convert_with_model_and_column_descriptions():
     dataset_description: str = context_with_descriptions.data["description"]
 
     assert dataset_description.startswith('Test dbt model 1')
-    assert '| Columns |' in dataset_description
+    assert '| Column |' in dataset_description
+    assert '| Description |' in dataset_description
     assert '| --- |' in dataset_description
     assert '| model_column_1 |' in dataset_description
     assert '| model_column_2 |' in dataset_description
@@ -29,4 +30,4 @@ def test_convert_without_model_and_column_descriptions():
 
     dataset_description: str = context_without_description.data["description"]
 
-    assert dataset_description.startswith('| Columns |')
+    assert dataset_description.startswith('| Column |')

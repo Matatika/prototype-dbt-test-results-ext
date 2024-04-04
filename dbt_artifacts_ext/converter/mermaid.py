@@ -63,15 +63,21 @@ class MermaidConverter(Converter):
                 description: list = []
 
                 for column_name, column_data in columns.items():
+                    description_table_row = f"| {column_name} |"
+
                     column_name_underscored = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
                     column_type = column_data["type"].replace(" ", "_")
                     column_metadata = metadata.get(table_name, {}).get("columns", {})
+
                     if any(column_name == key for key in column_metadata.keys()):
-                        column_description = '"' + column_metadata[column_name]["description"] + '"'
+                        column_description = column_metadata[column_name]["description"]
+                        description_table_row += f" {column_description} |"
+                        column_description = f'"{column_description}"'
                     else:
                         column_description = ''
+                        description_table_row += " |"
 
-                    description.append(f"| {column_name} |")
+                    description.append(description_table_row)
 
                     lines.append(f"{INDENT * 2}{column_name_underscored} {column_type} {column_description}")
 
