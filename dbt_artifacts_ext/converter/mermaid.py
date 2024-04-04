@@ -111,6 +111,7 @@ class MermaidConverter(Converter):
                         table_data["unique_id"],
                         table_data,
                         description,
+                        [resource_type],
                         "\n".join(lines),
                     )
                 )
@@ -129,6 +130,7 @@ class MermaidConverter(Converter):
                     package_name,
                     metadata,
                     description,
+                    self.resource_types,
                     "\n".join(full_lines),
                 )
             )

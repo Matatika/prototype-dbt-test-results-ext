@@ -31,6 +31,7 @@ class ConversionContext:
     identifier: Any
     metadata: dict
     description: "list[str]"
+    tags: "list[str]"
     data: Any
 
 
