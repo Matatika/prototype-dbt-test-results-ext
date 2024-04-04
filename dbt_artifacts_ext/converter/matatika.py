@@ -35,11 +35,12 @@ class MatatikaConverter(MermaidConverter):
                 result_description.extend(result.description)
                 description_parts.append('\n'.join(result_description))
 
-            description_parts.append('\n\n\n #dbt_artifacts')
+            result.tags.append("dbt")
 
             dataset = DatasetV0_2()
             dataset.title = result.metadata.get("name") or result.identifier
             dataset.description = '\n\n'.join(p for p in description_parts if p)
+            dataset.description += '\n\n' + ' '.join(f"#{t}" for t in result.tags if t)
             dataset.source = DEFAULT_SOURCE
             dataset.visualisation = json.dumps({"mermaid": {}}, indent=INDENT)
             dataset.raw_data = result.data

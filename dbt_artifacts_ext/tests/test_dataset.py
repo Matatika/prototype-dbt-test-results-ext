@@ -31,3 +31,19 @@ def test_convert_without_model_and_column_descriptions():
     dataset_description: str = context_without_description.data["description"]
 
     assert dataset_description.startswith('| Column |')
+
+
+def test_convert_gets_correct_tags():
+    converter = MatatikaConverter()
+    converter.load_artifacts()
+
+    contexts = converter.convert()
+    model_type_context = contexts[1]
+    test_type_contest = contexts[3]
+    source_type_context = contexts[5]
+    project_context = contexts[7]
+
+    assert '#test' in test_type_contest.data["description"]
+    assert '#model' in model_type_context.data["description"]
+    assert '#source' in source_type_context.data["description"]
+    assert all(tag in project_context.data["description"] for tag in ["#test", "#model", "#source"])
