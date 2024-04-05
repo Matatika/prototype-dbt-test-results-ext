@@ -46,8 +46,12 @@ class MermaidConverter(Converter):
                 current = str(i + 1).rjust(len(str(total_resources)))
                 progress = f"[{current}/{total_resources}]\t"
                 resource_type = table_data["resource_type"]
+                package_name = table_data["package_name"]
 
-                if resource_type not in self.resource_types:
+                if (
+                    resource_type not in self.resource_types
+                    or package_name in self.exclude_packages
+                ):
                     log.info(f"{progress}Skipping {resource_type} '{table_name}'")
                     continue
 
@@ -74,12 +78,14 @@ class MermaidConverter(Converter):
                         description_table_row += f" {column_description} |"
                         column_description = f'"{column_description}"'
                     else:
-                        column_description = ''
+                        column_description = ""
                         description_table_row += " |"
 
                     description.append(description_table_row)
 
-                    lines.append(f"{INDENT * 2}{column_name_underscored} {column_type} {column_description}")
+                    lines.append(
+                        f"{INDENT * 2}{column_name_underscored} {column_type} {column_description}"
+                    )
 
                 lines.append(f"{INDENT}}}")
                 lines.append("")
