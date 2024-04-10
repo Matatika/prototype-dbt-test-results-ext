@@ -1,46 +1,59 @@
+import pytest
+
 from dbt_artifacts_ext.converter.matatika import MatatikaConverter
 
 
-def test_convert_with_model_and_column_descriptions():
+@pytest.fixture()
+def contexts():
     converter = MatatikaConverter()
     converter.load_artifacts()
 
-    contexts = converter.convert()
-    context_with_descriptions = contexts[0]
-
-    dataset_description: str = context_with_descriptions.data["description"]
-
-    assert dataset_description.startswith("Test dbt model 1")
-    assert "| Column |" in dataset_description
-    assert "| Description |" in dataset_description
-    assert "| --- |" in dataset_description
-    assert "| `model_column_1` |" in dataset_description
-    assert "| `model_column_2` |" in dataset_description
-    assert "| `model_column_3` |" in dataset_description
-
-    assert (
-        "This is my column_one description"
-        in context_with_descriptions.metadata["columns"]["column_one"]["description"]
-    )
+    return converter.convert()
 
 
-def test_convert_without_model_and_column_descriptions():
-    converter = MatatikaConverter()
-    converter.load_artifacts()
+def test_convert_with_model_and_column_descriptions(contexts):
+    model_type_context = contexts[0]
+    description: str = model_type_context.data["description"]
+    lines = iter(description.splitlines())
 
-    contexts = converter.convert()
-    context_without_description = contexts[1]
+    def next_line():
+        return next(lines, None)
 
-    dataset_description: str = context_without_description.data["description"]
+    assert "Test dbt model 1" == next_line()
+    assert "" == next_line()
+    assert "| Column | Description |" == next_line()
+    assert "| --- | --- |" == next_line()
+    assert "| `model_column_1` | Description for `model_column_1` |" == next_line()
+    assert "| `model_column_2` | Description for `model_column_2` |" == next_line()
+    assert "| `model_column_3` | Description for `model_column_3` |" == next_line()
+    assert "" == next_line()
+    assert "#model" == next_line()
+    assert "#dbt" == next_line()
 
-    assert dataset_description.startswith("| Column |")
+    assert not next_line()  # end
 
 
-def test_convert_gets_correct_tags():
-    converter = MatatikaConverter()
-    converter.load_artifacts()
+def test_convert_without_model_and_column_descriptions(contexts):
+    model_type_context_undocumented = contexts[1]
+    description: str = model_type_context_undocumented.data["description"]
+    lines = iter(description.splitlines())
 
-    contexts = converter.convert()
+    def next_line():
+        return next(lines, None)
+
+    assert "| Column | Description |" == next_line()
+    assert "| --- | --- |" == next_line()
+    assert "| `model_column_1` |  |" == next_line()
+    assert "| `model_column_2` |  |" == next_line()
+    assert "| `model_column_3` |  |" == next_line()
+    assert "" == next_line()
+    assert "#model" == next_line()
+    assert "#dbt" == next_line()
+
+    assert not next_line()  # end
+
+
+def test_convert_gets_correct_tags(contexts):
     model_type_context = contexts[1]
     test_type_contest = contexts[3]
     source_type_context = contexts[5]

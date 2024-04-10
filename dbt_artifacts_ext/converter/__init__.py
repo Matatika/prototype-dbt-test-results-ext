@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import abc
 import json
 import os
@@ -30,8 +32,8 @@ class ResourceType(str, Enum):
 class ConversionContext:
     identifier: Any
     metadata: dict
-    description: List[str]
-    tags: List[str]
+    md_table_rows: list[str]
+    tags: list[str]
     data: Any
 
 

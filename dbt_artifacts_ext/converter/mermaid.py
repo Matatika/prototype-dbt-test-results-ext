@@ -64,27 +64,25 @@ class MermaidConverter(Converter):
 
                 columns: dict[str, dict] = tables.get(table_name, {}).get("columns", {})
 
-                description: list = []
+                md_table_rows = []
 
                 for column_name, column_data in columns.items():
-                    description_table_row = f"| `{column_name}` |"
-
                     column_name_underscored = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
                     column_type = column_data["type"].replace(" ", "_")
                     column_metadata = metadata.get(table_name, {}).get("columns", {})
+                    column_description = column_metadata.get(column_name, {}).get(
+                        "description", ""
+                    )
 
-                    if any(column_name == key for key in column_metadata.keys()):
-                        column_description = column_metadata[column_name]["description"]
-                        description_table_row += f" {column_description} |"
-                        column_description = f'"{column_description}"'
-                    else:
-                        column_description = ""
-                        description_table_row += " |"
-
-                    description.append(description_table_row)
+                    md_table_rows.append(
+                        "| {name} | {description} |".format(
+                            name=f"`{column_name}`",
+                            description=column_description,
+                        )
+                    )
 
                     lines.append(
-                        f"{INDENT * 2}{column_name_underscored} {column_type} {column_description}"
+                        f'{INDENT * 2}{column_name_underscored} {column_type} "{column_description}"'
                     )
 
                 lines.append(f"{INDENT}}}")
@@ -116,7 +114,7 @@ class MermaidConverter(Converter):
                     ConversionContext(
                         table_data["unique_id"],
                         table_data,
-                        description,
+                        md_table_rows,
                         [resource_type],
                         "\n".join(lines),
                     )
@@ -135,7 +133,7 @@ class MermaidConverter(Converter):
                 ConversionContext(
                     package_name,
                     metadata,
-                    description,
+                    md_table_rows,
                     self.resource_types,
                     "\n".join(full_lines),
                 )

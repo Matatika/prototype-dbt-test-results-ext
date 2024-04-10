@@ -7,8 +7,14 @@
             "name": "model_table_1",
             "description": "Test dbt model 1",
             "columns": {
-                "column_one": {
-                    "description": "This is my column_one description"
+                "model_column_1": {
+                    "description": "Description for `model_column_1`"
+                },
+                "model_column_2": {
+                    "description": "Description for `model_column_2`"
+                },
+                "model_column_3": {
+                    "description": "Description for `model_column_3`"
                 }
             }
         },
