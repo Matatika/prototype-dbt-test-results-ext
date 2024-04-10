@@ -14,9 +14,9 @@ def test_convert_with_model_and_column_descriptions():
     assert "| Column |" in dataset_description
     assert "| Description |" in dataset_description
     assert "| --- |" in dataset_description
-    assert "| model_column_1 |" in dataset_description
-    assert "| model_column_2 |" in dataset_description
-    assert "| model_column_3 |" in dataset_description
+    assert "| `model_column_1` |" in dataset_description
+    assert "| `model_column_2` |" in dataset_description
+    assert "| `model_column_3` |" in dataset_description
 
     assert (
         "This is my column_one description"

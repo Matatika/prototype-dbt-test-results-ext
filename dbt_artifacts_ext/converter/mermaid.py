@@ -67,7 +67,7 @@ class MermaidConverter(Converter):
                 description: list = []
 
                 for column_name, column_data in columns.items():
-                    description_table_row = f"| {column_name} |"
+                    description_table_row = f"| `{column_name}` |"
 
                     column_name_underscored = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
                     column_type = column_data["type"].replace(" ", "_")
