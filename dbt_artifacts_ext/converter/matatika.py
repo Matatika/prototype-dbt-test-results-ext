@@ -35,9 +35,8 @@ class MatatikaConverter(MermaidConverter):
                 *result.md_table_rows,
             ]
 
-            tags = [f"#{t}" for t in (*result.tags, "dbt") if t]
-
-            description_parts = ["\n".join(s) for s in (md_table, tags)]
+            tags = [f"#{t}" for t in (*result.tags, "dbt")]
+            description_parts = ["\n".join(md_table), " ".join(tags)]
 
             if "description" in result.metadata:
                 description_parts.insert(0, result.metadata["description"])
