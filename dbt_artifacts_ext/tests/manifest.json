@@ -5,14 +5,24 @@
             "unique_id": "model.test_project.model_table_1",
             "package_name": "test_project",
             "name": "model_table_1",
-            "description": "Test dbt model 1"
+            "description": "Test dbt model 1",
+            "columns": {
+                "model_column_1": {
+                    "description": "Description for `model_column_1`"
+                },
+                "model_column_2": {
+                    "description": "Description for `model_column_2`"
+                },
+                "model_column_3": {
+                    "description": "Description for `model_column_3`"
+                }
+            }
         },
         "model.test_project.model_table_2": {
             "resource_type": "model",
             "unique_id": "model.test_project.model_table_2",
             "package_name": "test_project",
-            "name": "model_table_2",
-            "description": "Test dbt model 2"
+            "name": "model_table_2"
         },
         "test.test_project.test_table_1": {
             "resource_type": "test",
@@ -70,7 +80,6 @@
         "source.test_project.source_table_1": [],
         "source.test_project.source_table_2": [],
         "source.test_project.source_table_3": []
-
     },
     "child_map": {
         "model.test_project.model_table_1": [

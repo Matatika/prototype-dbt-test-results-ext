@@ -89,6 +89,8 @@ class MatatikaConverter(Converter):
                 ConversionContext(
                     test_node["unique_id"],
                     {},
+                    [],
+                    [],
                     {
                         **dict.fromkeys(KEY_ORDER),
                         **dataset.to_dict(apply_translations=False),

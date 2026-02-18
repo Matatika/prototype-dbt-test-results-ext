@@ -41,13 +41,17 @@ class MermaidConverter(Converter):
 
             total_resources = len(metadata)
             full_lines = []
-            
+
             for i, (table_name, table_data) in enumerate(metadata.items()):
                 current = str(i + 1).rjust(len(str(total_resources)))
                 progress = f"[{current}/{total_resources}]\t"
                 resource_type = table_data["resource_type"]
+                package_name = table_data["package_name"]
 
-                if resource_type not in self.resource_types:
+                if (
+                    resource_type not in self.resource_types
+                    or package_name in self.exclude_packages
+                ):
                     log.info(f"{progress}Skipping {resource_type} '{table_name}'")
                     continue
 
@@ -60,11 +64,26 @@ class MermaidConverter(Converter):
 
                 columns: dict[str, dict] = tables.get(table_name, {}).get("columns", {})
 
-                for column_name, column_data in columns.items():
-                    column_name = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
-                    column_type = column_data["type"].replace(" ", "_")
+                md_table_rows = []
 
-                    lines.append(f"{INDENT * 2}{column_type} {column_name}")
+                for column_name, column_data in columns.items():
+                    column_name_underscored = re.sub(r"[^\w\(\)\[\]]", "_", column_name)
+                    column_type = column_data["type"].replace(" ", "_")
+                    column_metadata = metadata.get(table_name, {}).get("columns", {})
+                    column_description = column_metadata.get(column_name, {}).get(
+                        "description", ""
+                    )
+
+                    md_table_rows.append(
+                        "| {name} | {description} |".format(
+                            name=f"`{column_name}`",
+                            description=column_description,
+                        )
+                    )
+
+                    lines.append(
+                        f'{INDENT * 2}{column_name_underscored} {column_type} "{column_description}"'
+                    )
 
                 lines.append(f"{INDENT}}}")
                 lines.append("")
@@ -95,6 +114,8 @@ class MermaidConverter(Converter):
                     ConversionContext(
                         table_data["unique_id"],
                         table_data,
+                        md_table_rows,
+                        [resource_type],
                         "\n".join(lines),
                     )
                 )
@@ -112,6 +133,8 @@ class MermaidConverter(Converter):
                 ConversionContext(
                     package_name,
                     metadata,
+                    md_table_rows,
+                    self.resource_types,
                     "\n".join(full_lines),
                 )
             )
