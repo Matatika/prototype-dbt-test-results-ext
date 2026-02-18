@@ -1,13 +1,15 @@
 import json
+import re
+from textwrap import dedent
 
 import structlog
 import yaml
 from matatika.dataset import DatasetV0_2
 
-from dbt_artifacts_ext.converter import ConversionContext, Converter
-from dbt_artifacts_ext.converter.mermaid import INDENT, MermaidConverter
+from dbt_artifacts_ext.converter import ConversionContext, Converter, ResourceType
+from dbt_artifacts_ext.converter.mermaid import INDENT
 
-DEFAULT_SOURCE = "dbt models"
+DEFAULT_SOURCE = "Test Results"
 KEY_ORDER = ("version",)
 
 log = structlog.get_logger()
@@ -22,41 +24,84 @@ def multiline_string_representer(dumper: yaml.Dumper, data: str):
 yaml.add_representer(str, multiline_string_representer)
 
 
-class MatatikaConverter(MermaidConverter):
+class MatatikaConverter(Converter):
     file_ext = ".yml"
 
     def convert(self):
         results = super().convert()
 
-        for result in results:
-            md_table = [
-                "| Column | Description |",
-                "| --- | --- |",
-                *result.md_table_rows,
-            ]
+        nodes: dict[str, dict] = self.manifest["nodes"]
 
-            tags = [f"#{t}" for t in (*result.tags, "dbt")]
-            description_parts = ["\n".join(md_table), " ".join(tags)]
+        test_nodes: list[dict[str, str]] = [
+            node
+            for node in nodes.values()
+            if node["resource_type"] == ResourceType.TEST
+        ]
 
-            if "description" in result.metadata:
-                description_parts.insert(0, result.metadata["description"])
-
+        for test_node in test_nodes:
             dataset = DatasetV0_2()
-            dataset.title = result.metadata.get("name") or result.identifier
-            dataset.description = "\n\n".join(description_parts)
+            dataset.title = re.sub(r"[\W_]", " ", test_node["name"]).capitalize()
+            dataset.description = "\n\n".join(
+                text
+                for text in [
+                    test_node.get("description"),
+                    "#test_results",
+                ]
+                if text
+            )
             dataset.source = DEFAULT_SOURCE
-            dataset.visualisation = json.dumps({"mermaid": {}}, indent=INDENT)
-            dataset.raw_data = result.data
 
-            result.data = {
-                **dict.fromkeys(KEY_ORDER),
-                **dataset.to_dict(apply_translations=False),
-            }
+            dataset.metadata = json.dumps(
+                {
+                    "name": "TEST_FAILURE_CENTRAL",
+                    "related_table": {
+                        "columns": [
+                            {
+                                "name": "TEST_FAILURES_JSON",
+                                "label": "Test failures JSON",
+                                "post_process": "json_parse",
+                            },
+                        ]
+                    },
+                },
+                indent=INDENT,
+            )
+
+            dataset.visualisation = json.dumps(
+                {"html-table": {}},
+                indent=INDENT,
+            )
+
+            dataset.query = dedent(
+                f"""
+                SELECT TEST_FAILURES_JSON "TEST_FAILURE_CENTRAL.TEST_FAILURES_JSON"
+                FROM MATATIKA_TEST_RESULTS.TEST_FAILURE_CENTRAL
+                WHERE TEST_NAME = '{test_node["unique_id"]}'
+                AND TEST_RUN_TIME = (
+                    SELECT MAX(TEST_RUN_TIME)
+                    FROM MATATIKA_TEST_RESULTS.TEST_FAILURE_CENTRAL
+                    WHERE TEST_NAME = '{test_node["unique_id"]}'
+                )
+                """
+            ).strip("\n")
+
+            results.append(
+                ConversionContext(
+                    test_node["unique_id"],
+                    {},
+                    [],
+                    [],
+                    {
+                        **dict.fromkeys(KEY_ORDER),
+                        **dataset.to_dict(apply_translations=False),
+                    },
+                )
+            )
 
         return results
 
-    def write(self, result: ConversionContext):
-        path = Converter.write(self, result)
+    def write(self, result):
+        path = super().write(result)
 
         with open(path, "w") as f:
             yaml.dump(
